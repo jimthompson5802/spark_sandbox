@@ -1,89 +1,63 @@
-version: '3.8'
+version: '3'
 
 services:
-  dev:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    platform: linux/amd64
-    container_name: jupyterlab-notebook
-    volumes:
-      - ./:/app
-    ports:
-      # Add ports as needed for your applications
-      - "3000:3000"
-      - "8888:8888"  # JupyterLab port
-    environment:
-      - TZ=UTC
-    # Keep the container running
-    tty: true
-    stdin_open: true
-    # Restart policy
-    restart: unless-stopped
-
   spark-master:
     build:
       context: .
       dockerfile: Dockerfile_spark
-    platform: linux/amd64
     container_name: spark-master
-    environment:
-      - SPARK_NODE_TYPE=master
-      - SPARK_MASTER_HOST=spark-master
-      - TZ=UTC
+    hostname: spark-master
     ports:
-      - "8080:8080"  # Spark Master UI
+      - "8080:8080"  # Spark Master Web UI
       - "7077:7077"  # Spark Master port
-      - "4040:4040"  # Spark Application UI for running jobs
-    volumes:
-      - ./:/app
+      - "4040:4040"  # Spark Application UI
+    environment:
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=8080
+    command: master
     networks:
       - spark-network
-    restart: unless-stopped
 
   spark-worker-1:
     build:
       context: .
       dockerfile: Dockerfile_spark
-    platform: linux/amd64
     container_name: spark-worker-1
+    hostname: spark-worker-1
     depends_on:
       - spark-master
-    environment:
-      - SPARK_NODE_TYPE=worker
-      - SPARK_MASTER_HOST=spark-master
-      - SPARK_WORKER_CORES=2
-      - SPARK_WORKER_MEMORY=2g
-      - TZ=UTC
     ports:
-      - "8081:8081"  # Worker UI
-    volumes:
-      - ./:/app
+      - "8081:8081"  # Worker 1 Web UI
+    environment:
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=1g
+      - SPARK_WORKER_WEBUI_PORT=8081
+    command: worker
     networks:
       - spark-network
-    restart: unless-stopped
 
   spark-worker-2:
     build:
       context: .
       dockerfile: Dockerfile_spark
-    platform: linux/amd64
     container_name: spark-worker-2
+    hostname: spark-worker-2
     depends_on:
       - spark-master
-    environment:
-      - SPARK_NODE_TYPE=worker
-      - SPARK_MASTER_HOST=spark-master
-      - SPARK_WORKER_CORES=2
-      - SPARK_WORKER_MEMORY=2g
-      - TZ=UTC
     ports:
-      - "8082:8081"  # Worker UI (different host port to avoid conflict)
-    volumes:
-      - ./:/app
+      - "8082:8081"  # Worker 2 Web UI
+    environment:
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=1g
+      - SPARK_WORKER_WEBUI_PORT=8081
+    command: worker
     networks:
       - spark-network
-    restart: unless-stopped
 
 networks:
   spark-network:
