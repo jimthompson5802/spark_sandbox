@@ -1,0 +1,52 @@
+FROM --platform=linux/amd64 openjdk:11-jdk-slim
+
+# Set versions
+ENV SPARK_VERSION=3.5.0
+ENV HADOOP_VERSION=3
+ENV SPARK_HOME=/opt/spark
+ENV PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+ENV PYTHONHASHSEED=1
+
+
+# Install essential dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    python3 \
+    python3-pip \
+    python3-dev \
+    procps \
+    net-tools \
+    netcat \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download and set up Spark
+RUN wget -q "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" \
+    && tar xzf "spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" -C /opt \
+    && rm "spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" \
+    && ln -s "/opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}" $SPARK_HOME
+
+# Install required Python packages
+RUN pip install --no-cache-dir \
+    --upgrade pip \
+    setuptools \
+    wheel \
+    uv
+
+# Install Python packages for data science and ML
+RUN uv pip install --no-cache-dir \
+    pyspark==${SPARK_VERSION} \
+    numpy \
+    pandas \
+    scikit-learn \
+    lightgbm \
+    --system
+
+# Set up for spark master or worker nodes
+COPY spark-start.sh /
+RUN chmod +x /spark-start.sh
+
+EXPOSE 7077 4040 6066 8888
+
+ENTRYPOINT ["/spark-start.sh"]

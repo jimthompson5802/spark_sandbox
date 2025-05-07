@@ -1,5 +1,9 @@
 FROM --platform=linux/amd64 python:3
 
+# Set versions
+ENV SPARK_VERSION=3.5.0
+
+
 # Update package lists and install development essentials
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -12,6 +16,8 @@ RUN apt-get update && apt-get install -y \
     npm \
     openjdk-17-jdk \
     maven \
+    net-tools \
+    procps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -24,7 +30,7 @@ RUN pip install --no-cache-dir \
 
 RUN uv pip install --no-cache-dir \
     jupyterlab \
-    pyspark \
+    pyspark==${SPARK_VERSION} \
     pandas \
     numpy \
     scikit-learn \
