@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk-slim
+FROM --platform=linux/amd64 openjdk:11-jdk-slim
 
 # Set environment variables
 ENV SPARK_VERSION=3.4.1
