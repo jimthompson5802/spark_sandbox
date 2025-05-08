@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Activate conda environment
+source ${CONDA_HOME}/bin/activate spark-env
+
 # Default values
 SPARK_MASTER_HOST=${SPARK_MASTER_HOST:-spark-master}
 SPARK_MASTER_PORT=${SPARK_MASTER_PORT:-7077}
