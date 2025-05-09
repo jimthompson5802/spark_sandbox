@@ -35,6 +35,9 @@ services:
       - spark-master
     ports:
       - "8081:8081"  # Worker 1 Web UI
+    volumes:
+      - ./data:/home/jovyan/data
+      - ./results:/home/jovyan/results
     environment:
       - SPARK_MASTER_HOST=spark-master
       - SPARK_MASTER_PORT=7077
@@ -61,6 +64,9 @@ services:
       - spark-master
     ports:
       - "8082:8081"  # Worker 2 Web UI
+    volumes:
+      - ./data:/home/jovyan/data
+      - ./results:/home/jovyan/results
     environment:
       - SPARK_MASTER_HOST=spark-master
       - SPARK_MASTER_PORT=7077
@@ -86,7 +92,7 @@ services:
       - "4040:4040"  # Spark Application UI
 
     volumes:
-      - ./jupyter_notebooks:/home/jovyan
+      - .:/home/jovyan
     environment:
       - SPARK_MASTER=spark://spark-master:7077
       - JUPYTER_ENABLE_LAB=yes
