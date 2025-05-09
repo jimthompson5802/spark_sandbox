@@ -1,6 +1,6 @@
 FROM quay.io/jupyter/all-spark-notebook
 
-RUN conda install -c conda-forge lightgbm
+RUN conda install -c conda-forge lightgbm pyarrow
 
 
 # Start JupyterLab without authentication
