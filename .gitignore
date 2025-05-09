@@ -48,6 +48,10 @@ coverage.xml
 
 # Jupyter Notebook
 .ipynb_checkpoints
+.ipython/
+.jupyter/
+.local/
+
 
 # Environments
 .env
@@ -68,3 +72,7 @@ venv.bak/
 .DS_Store
 logs/
 *.log
+
+# data
+data/
+results/
