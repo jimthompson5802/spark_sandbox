@@ -1,13 +1,12 @@
-version: '3'
 
 services:
   spark-master:
     build:
       context: .
-      dockerfile: Dockerfile_spark
+      dockerfile: Dockerfile
       args:
         - TARGETPLATFORM=linux/amd64
-    platform: linux/amd64
+    # platform: linux/amd64
     container_name: spark-master
     hostname: spark-master
     ports:
@@ -17,19 +16,21 @@ services:
       - SPARK_MASTER_HOST=spark-master
       - SPARK_MASTER_PORT=7077
       - SPARK_MASTER_WEBUI_PORT=8080
-    command: master
+      - SPARK_LOG_DIR=/tmp
+    entrypoint: ["/bin/sh", "-c", "/usr/local/spark/sbin/start-master.sh --ip 0.0.0.0 && tail -f /dev/null"]
     networks:
       - spark-network
 
   spark-worker-1:
     build:
       context: .
-      dockerfile: Dockerfile_spark
+      dockerfile: Dockerfile
       args:
-        - TARGETPLATFORM=linux/amd64
-    platform: linux/amd64
+      - TARGETPLATFORM=linux/amd64
+    # platform: linux/amd64
     container_name: spark-worker-1
     hostname: spark-worker-1
+    user: "root:root"
     depends_on:
       - spark-master
     ports:
@@ -37,22 +38,25 @@ services:
     environment:
       - SPARK_MASTER_HOST=spark-master
       - SPARK_MASTER_PORT=7077
-      - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=1g
+      - SPARK_WORKER_CORES=4
+      - SPARK_WORKER_MEMORY=4g
       - SPARK_WORKER_WEBUI_PORT=8081
-    command: worker
+      - SPARK_LOG_DIR=/tmp/spark-logs
+      - SPARK_WORKER_DIR=/tmp/spark-work
+    entrypoint: ["/bin/sh", "-c", "mkdir -p /tmp/spark-work && chmod 777 /tmp/spark-work && /usr/local/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"]
     networks:
       - spark-network
 
   spark-worker-2:
     build:
       context: .
-      dockerfile: Dockerfile_spark
+      dockerfile: Dockerfile
       args:
         - TARGETPLATFORM=linux/amd64
-    platform: linux/amd64
+    # platform: linux/amd64
     container_name: spark-worker-2
     hostname: spark-worker-2
+    user: "root:root"
     depends_on:
       - spark-master
     ports:
@@ -60,30 +64,37 @@ services:
     environment:
       - SPARK_MASTER_HOST=spark-master
       - SPARK_MASTER_PORT=7077
-      - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=1g
+      - SPARK_WORKER_CORES=4
+      - SPARK_WORKER_MEMORY=4g
       - SPARK_WORKER_WEBUI_PORT=8081
-    command: worker
+      - SPARK_LOG_DIR=/tmp/spark-logs
+      - SPARK_WORKER_DIR=/tmp/spark-work
+    entrypoint: ["/bin/sh", "-c", "/usr/local/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"]
     networks:
       - spark-network
 
   jupyterlab:
     build:
       context: .
-      dockerfile: Dockerfile_jupyter
+      dockerfile: Dockerfile
       args:
         - TARGETPLATFORM=linux/amd64
-    platform: linux/amd64
+    # platform: linux/amd64
     container_name: jupyterlab
     ports:
       - "8888:8888"  # JupyterLab interface
       - "4040:4040"  # Spark Application UI
 
     volumes:
-      - ./jupyter_notebooks:/home/jovyan/work
+      - ./jupyter_notebooks:/home/jovyan
     environment:
       - SPARK_MASTER=spark://spark-master:7077
-    command: start-notebook.sh --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.ip='0.0.0.0'
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_IP=0.0.0.0
+      - JUPYTER_PORT=8888
+      - JUPYTER_TOKEN=""  # Set to empty string for no token
+      - JUPYTER_PASSWORD=""  # Set to empty string for no password
+      - JUPYTER_DISABLE_AUTH=true # Disable authentication
     networks:
       - spark-network
     depends_on:
