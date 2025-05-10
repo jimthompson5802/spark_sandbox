@@ -1,0 +1,4 @@
+# needed for local running of Data Wrangler
+pandas
+pyarrow
+ipykernel
