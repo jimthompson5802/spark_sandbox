@@ -79,63 +79,63 @@ services:
     networks:
       - spark-network
 
-  spark-worker-3:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - TARGETPLATFORM=linux/amd64
-    # platform: linux/amd64
-    container_name: spark-worker-3
-    hostname: spark-worker-4
-    user: "root:root"
-    depends_on:
-      - spark-master
-    ports:
-      - "8083:8081"  
-    volumes:
-      - ./data:/home/jovyan/data
-      - ./results:/home/jovyan/results
-    environment:
-      - SPARK_MASTER_HOST=spark-master
-      - SPARK_MASTER_PORT=7077
-      - SPARK_WORKER_CORES=4
-      - SPARK_WORKER_MEMORY=4g
-      - SPARK_WORKER_WEBUI_PORT=8081
-      - SPARK_LOG_DIR=/tmp/spark-logs
-      - SPARK_WORKER_DIR=/tmp/spark-work
-    entrypoint: ["/bin/sh", "-c", "/usr/local/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"]
-    networks:
-      - spark-network
+  # spark-worker-3:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - TARGETPLATFORM=linux/amd64
+  #   # platform: linux/amd64
+  #   container_name: spark-worker-3
+  #   hostname: spark-worker-3
+  #   user: "root:root"
+  #   depends_on:
+  #     - spark-master
+  #   ports:
+  #     - "8083:8081"  
+  #   volumes:
+  #     - ./data:/home/jovyan/data
+  #     - ./results:/home/jovyan/results
+  #   environment:
+  #     - SPARK_MASTER_HOST=spark-master
+  #     - SPARK_MASTER_PORT=7077
+  #     - SPARK_WORKER_CORES=4
+  #     - SPARK_WORKER_MEMORY=4g
+  #     - SPARK_WORKER_WEBUI_PORT=8081
+  #     - SPARK_LOG_DIR=/tmp/spark-logs
+  #     - SPARK_WORKER_DIR=/tmp/spark-work
+  #   entrypoint: ["/bin/sh", "-c", "/usr/local/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"]
+  #   networks:
+  #     - spark-network
 
-  spark-worker-4:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - TARGETPLATFORM=linux/amd64
-    # platform: linux/amd64
-    container_name: spark-worker-4
-    hostname: spark-worker-4
-    user: "root:root"
-    depends_on:
-      - spark-master
-    ports:
-      - "8084:8081"  # Worker 2 Web UI
-    volumes:
-      - ./data:/home/jovyan/data
-      - ./results:/home/jovyan/results
-    environment:
-      - SPARK_MASTER_HOST=spark-master
-      - SPARK_MASTER_PORT=7077
-      - SPARK_WORKER_CORES=4
-      - SPARK_WORKER_MEMORY=4g
-      - SPARK_WORKER_WEBUI_PORT=8081
-      - SPARK_LOG_DIR=/tmp/spark-logs
-      - SPARK_WORKER_DIR=/tmp/spark-work
-    entrypoint: ["/bin/sh", "-c", "/usr/local/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"]
-    networks:
-      - spark-network
+  # spark-worker-4:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - TARGETPLATFORM=linux/amd64
+  #   # platform: linux/amd64
+  #   container_name: spark-worker-4
+  #   hostname: spark-worker-4
+  #   user: "root:root"
+  #   depends_on:
+  #     - spark-master
+  #   ports:
+  #     - "8084:8081"  # Worker 2 Web UI
+  #   volumes:
+  #     - ./data:/home/jovyan/data
+  #     - ./results:/home/jovyan/results
+  #   environment:
+  #     - SPARK_MASTER_HOST=spark-master
+  #     - SPARK_MASTER_PORT=7077
+  #     - SPARK_WORKER_CORES=4
+  #     - SPARK_WORKER_MEMORY=4g
+  #     - SPARK_WORKER_WEBUI_PORT=8081
+  #     - SPARK_LOG_DIR=/tmp/spark-logs
+  #     - SPARK_WORKER_DIR=/tmp/spark-work
+  #   entrypoint: ["/bin/sh", "-c", "/usr/local/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"]
+  #   networks:
+  #     - spark-network
 
   jupyterlab:
     build:
