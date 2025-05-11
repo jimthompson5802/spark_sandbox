@@ -94,7 +94,7 @@ The notebook is designed for creating and preparing time series data for machine
 ![Generated synthetic data sets](images/synthetic_time_series_data.png)
 
 ## `lightgbm` and `pyspark` Integration
-**Notebook**: [spark_lightgbm_classification.ipynb](./jupyter_notebooks/spark_lightgbm_integration.ipynb)
+**Notebook**: [spark_lightgbm_classification.ipynb](./jupyter_notebooks/spark_lightgbm_classification.ipynb)
 
 The notebook `spark_lightgbm_classification.ipynb` demonstrates a distributed approach to training and evaluating LightGBM classification models using Apache Spark. It is designed to handle large-scale datasets efficiently by leveraging Spark's parallel processing capabilities. 
 
