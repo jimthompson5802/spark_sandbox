@@ -100,7 +100,7 @@ The notebook is designed for creating and preparing time series data for machine
 
 The notebook `spark_lightgbm_classification.ipynb` demonstrates a distributed approach to training and evaluating LightGBM classification models using Apache Spark. It is designed to handle large-scale datasets efficiently by leveraging Spark's parallel processing capabilities. 
 
-A key design assumpiton is that data passed to and from the Spark Workers is not via the Spark inter-process communication mechanism.  All data is passed via a common storage.  As such the code assumes model ready training and test data has previously been generated and stored in parquet files. And results are saved to storage.  Rationale for this approach is to minimize issues that may arise with limitations on the Spark inter-process communication methods, such as size or data type limits.  After hyperparameter tunning, the ressults are read from the storage and aggregated.
+A key design assumpiton is data are passed to and from the Spark Workers through common storage and not using the Spark inter-process communication.  As such the code assumes model ready training and test data has previously been generated and stored in parquet files. And results are saved to storage.  Rationale for this approach is to minimize issues that may arise with limitations on the Spark inter-process communication methods, such as size or data type limits.  After hyperparameter tunning, the results are read from the storage and aggregated.
 
 The notebook performs the following tasks:
 
