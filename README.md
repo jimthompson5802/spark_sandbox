@@ -37,6 +37,8 @@ Mac:jim spark_sandbox[504]$ docker compose up -d
 ```
 
 
+Connecting to the Juypterlab server via the web browser or from Visual Studio code use the following URL: `http://localhost:8888`. For ease of testing, the Jupyterlab server is configured to allow access without a password or token. However, in a production environment, it is recommended to set up authentication and secure access to the Jupyterlab server.
+
 Once a Spark Applicaiton is running, the application UI will be accessible at `http://localhost:4040`. You can monitor the Spark cluster's status and job progress through this interface.
 
 To stop the environment, run:
