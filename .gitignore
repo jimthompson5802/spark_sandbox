@@ -25,6 +25,7 @@ wheels/
 *.egg
 MANIFEST
 *.whl
+*.zip
 
 # PyInstaller
 *.manifest
