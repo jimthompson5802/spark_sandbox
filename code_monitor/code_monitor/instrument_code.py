@@ -29,13 +29,12 @@ class SystemMonitor:
 
     def snapshot_cpu(self) -> Tuple:
         """
-        Take a snapshot of the current CPU usage and store it.
-        The snapshot includes timestamp, CPU percent, and system-wide CPU stats.
+        Take a snapshot of the current CPU usage.
+        Reads user and system time from /proc/self/stat and captures wall time.
 
         Returns:
-            dict: A dictionary containing CPU usage information
+            Tuple: A tuple containing (utime, stime, wall_time) values
         """
-        """Read utime and stime from /proc/self/stat."""
         with open("/proc/self/stat", "r") as f:
             fields = f.read().split()
             utime = int(fields[13])  # 14th field: user mode jiffies
@@ -45,10 +44,11 @@ class SystemMonitor:
 
     def compute_cpu_usage(self, before_snapshot: Tuple, after_snapshot: Tuple) -> float:
         """
-        Compute the CPU usage percentage based on the snapshot.
+        Compute the CPU usage percentage between two snapshots.
 
         Args:
-            snapshot (Tuple): A tuple containing utime, stime, and wall_start
+            before_snapshot (Tuple): A tuple containing (utime, stime, wall_time) at start
+            after_snapshot (Tuple): A tuple containing (utime, stime, wall_time) at end
 
         Returns:
             float: The CPU usage percentage
@@ -57,9 +57,7 @@ class SystemMonitor:
         after_utime, after_stime, after_wall_time = after_snapshot
         wall_time = after_wall_time - before_wall_time
 
-        cpu_time = (
-            (after_utime - before_utime) + (after_stime - before_stime)
-        ) / self.clk_tck
+        cpu_time = ((after_utime - before_utime) + (after_stime - before_stime)) / self.clk_tck
 
         cpu_usage = (cpu_time / wall_time) * 100 if wall_time > 0 else 0.0
 
@@ -86,6 +84,4 @@ if __name__ == "__main__":
     after_snapshot = monitor.snapshot_cpu()
     print(f"CPU snapshot after work: {after_snapshot}")
 
-    print(
-        f"\nCPU utilization:{monitor.compute_cpu_usage(before_snapshot, after_snapshot):.2f}%"
-    )
+    print(f"\nCPU utilization:{monitor.compute_cpu_usage(before_snapshot, after_snapshot):.2f}%")

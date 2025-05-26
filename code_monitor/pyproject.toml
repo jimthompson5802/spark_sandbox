@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "code_monitor"
+version = "0.0.1"
+description = "A utility for monitoring system resources during code execution"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+authors = [
+    {name = "Jim", email = "jim@example.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "psutil",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/username/code_monitor"
+"Bug Tracker" = "https://github.com/username/code_monitor/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "black",
+    "isort",
+    "mypy",
+]
+
+[tool.setuptools]
+packages = ["code_monitor"]
+
+[tool.black]
+line-length = 120
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
