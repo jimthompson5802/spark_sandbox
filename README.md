@@ -12,6 +12,11 @@ The testbed runtime is composed of set of Docker contatiners with two main compo
 1. **Standalone Apache Spark Cluster**: A distributed computing framework that allows for parallel processing of large datasets. It is set up in standalone mode, with a master node and multiple worker nodes.
 2. **Jupyterlab Notebook Server**: A web-based interactive computing environment that allows users to create and share documents containing live code, equations, visualizations, and narrative text. 
 
+If needed, system utils:
+```bash
+apt update && apt install -y net-tools iputils-ping vim
+```
+
 **Environment design**:
 ![Environment Design](images/testbed_run-time.drawio.png)
 
