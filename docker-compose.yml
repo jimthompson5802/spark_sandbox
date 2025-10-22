@@ -20,7 +20,7 @@ services:
       [
         "/bin/sh",
         "-c",
-        "/usr/local/spark/sbin/start-master.sh --ip 0.0.0.0 && tail -f /dev/null",
+        "/usr/local/spark/sbin/start-master.sh --host 0.0.0.0 && tail -f /dev/null",
       ]
     networks:
       - spark-network
